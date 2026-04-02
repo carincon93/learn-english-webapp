@@ -1,0 +1,13 @@
+---
+import PronunciationGame from "../components/PronunciationGame";
+import Layout from "../layouts/Layout.astro";
+import { db, Phrases } from "astro:db";
+
+const phrases = await db.select().from(Phrases);
+---
+
+<Layout>
+    <main>
+        <PronunciationGame client:load initialPhrases={phrases} />
+    </main>
+</Layout>

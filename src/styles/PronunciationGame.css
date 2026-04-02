@@ -1,0 +1,222 @@
+.game__card-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.game__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 30rem;
+  width: 18rem;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: rgb(26, 26, 26);
+  border-radius: var(--border-radius);
+  box-shadow:
+    /* inset 40px -50px 1000px 50px rgba(0, 0, 0, 0.8), */
+    rgba(27, 27, 27, 0.4) -5px 5px,
+    rgba(66, 66, 66, 0.3) -10px 10px,
+    rgba(32, 32, 32, 0.2) -15px 15px,
+    rgba(43, 43, 43, 0.1) -20px 20px,
+    rgba(175, 175, 175, 0.05) -25px 25px;
+}
+
+.game__card-noise {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Header */
+.game__card-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.game__card-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.game__card-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Phrase card */
+.game__card-phrase-text {
+  font-size: 2.5rem;
+  text-align: center;
+  font-weight: bold;
+  color: #aaaaaa;
+  margin: 0;
+}
+
+.game__card-phrase {
+  margin-bottom: 4.5rem;
+}
+
+.game__card-phrase-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.game__card-phrase-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: bold;
+}
+
+.game__card-difficulty-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  color: white;
+  font-weight: bold;
+}
+
+.game__card-difficulty-badge--easy {
+  background-color: #10b981;
+}
+
+.game__card-difficulty-badge--medium {
+  background-color: #f59e0b;
+}
+
+.game__card-difficulty-badge--hard {
+  background-color: #ef4444;
+}
+
+/* Recorder wrapper */
+.game__card-recorder {
+  margin-bottom: .5rem;
+}
+
+/* Transcript */
+.game__card-transcript {
+  position: absolute;
+  bottom: 5rem;
+  padding-right: 2rem;
+}
+
+.game__card-transcript-label {
+  font-size: 0.75rem;
+  color: #acacac;
+  margin-bottom: 0.25rem;
+}
+
+.game__card-transcript-text {
+  font-size: 1rem;
+  color: #acacac;
+  font-style: italic;
+}
+
+/* Buttons */
+.game__card-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.game__card-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+}
+
+.game__card-btn--skip:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Instructions */
+.game__card-instructions {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.game__card-instructions ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+/* Score Badge */
+.game__card-score {
+  position: absolute;
+  top: 1.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  opacity: 0;
+}
+
+.game__card-score-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  min-width: 4rem;
+}
+
+.game__card-score-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #888888;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.1rem;
+}
+
+.game__card-score-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

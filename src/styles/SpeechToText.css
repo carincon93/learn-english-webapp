@@ -1,0 +1,112 @@
+.stt__title {
+  font-size: 8.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff8c42, #ffa600);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  position: absolute;
+  top: 1rem;
+  left: 2rem;
+  z-index: 1;
+}
+
+.stt__display-area {
+  padding: 1rem;
+  overflow-y: auto;
+  word-wrap: break-word;
+  scrollbar-width: thin;
+  margin-top: 10rem;
+}
+
+.stt__display-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stt__display-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.stt__display-area::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.stt__placeholder {
+  color: rgba(78, 78, 78, 0.3);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.stt__placeholder--listening {
+  color: #a855f7;
+  animation: pulse 1.5s infinite;
+}
+
+.stt__note-block {
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  animation: note-in 0.25s ease;
+}
+
+.stt__note-block:last-child {
+  margin-bottom: 0;
+}
+
+.stt__note-text {
+  margin: 0;
+  font-size: 3rem;
+  line-height: 1.6;
+  color: rgba(31, 31, 31, 0.9);
+}
+
+.stt__mic-wrapper {
+  position: fixed;
+  bottom: 1rem;
+  right: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Media queries */
+
+@media screen and (max-width: 600px) {
+  .stt__container {
+    padding: 1rem;
+  }
+
+  .stt__display-area {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animations */
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    color: #a855f7;
+  }
+
+  50% {
+    color: #ec4899;
+  }
+}
+
+@keyframes note-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
