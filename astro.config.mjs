@@ -14,4 +14,10 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone',
   }),
+
+  vite: {
+    optimizeDeps: {
+      include: ['react-dom/client'],
+    },
+  },
 });

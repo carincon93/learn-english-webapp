@@ -1,10 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import SpeechToText from "../components/SpeechToText";
+import SpeechDisplay from "../components/SpeechDisplay";
+import SpeechControls from "../components/SpeechControls";
 ---
 
 <Layout title="Speech to Text - Weird English">
-  <main>
-    <SpeechToText client:load />
+  <li slot="island-content">
+    <SpeechControls client:load />
+  </li>
+
+  <main class="stt__container">
+    <SpeechDisplay client:only="react" />
   </main>
 </Layout>

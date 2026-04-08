@@ -8,10 +8,24 @@ import TroubleshootingTips from "../components/TroubleshootingTips";
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
+<Layout title="Weird English - Home">
+	<div slot="island-content">
+		<li style="display: flex; gap: 1rem; align-items: center;">
+			<a
+				href="/speech"
+				style="color: white; opacity: 0.7; text-decoration: none;"
+				>Speech</a
+			>
+			<span style="opacity: 0.3;">|</span>
+			<a
+				href="/pronunciation"
+				style="color: white; opacity: 0.7; text-decoration: none;"
+				>Game</a
+			>
+		</li>
+	</div>
 	<main>
-		<Welcome client:load />
-		<!-- <TroubleshootingTips client:load /> -->
+		<Welcome />
 	</main>
 	<Toast client:load />
 </Layout>

@@ -13,3 +13,14 @@ body {
 main {
     height: 100%;
 }
+
+button {
+    appearance: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}

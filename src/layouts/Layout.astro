@@ -1,11 +1,16 @@
 ---
-import '../styles/global.css';
-import '../styles/SpeechToText.css';
-import '../styles/VoiceRecorder.css';
-import '../styles/PronunciationGame.css';
-import '../styles/Drawer.css';
-import '../styles/Toast.css';
+import "../styles/global.css";
+import "../styles/SpeechToText.css";
+import "../styles/VoiceRecorder.css";
+import "../styles/PronunciationGame.css";
+import "../styles/Drawer.css";
+import "../styles/Toast.css";
+import "../styles/DynamicIsland.css";
+import { ClientRouter } from "astro:transitions";
+import DynamicIsland from "../components/DynamicIsland";
 
+const { title } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -16,9 +21,13 @@ import '../styles/Toast.css';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
+		<ClientRouter />
 	</head>
 	<body>
+		<DynamicIsland client:load key={currentPath}>
+			<slot name="island-content" />
+		</DynamicIsland>
 		<slot />
 	</body>
 </html>

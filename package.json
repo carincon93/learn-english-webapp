@@ -15,10 +15,13 @@
     "@astrojs/db": "^0.20.1",
     "@astrojs/node": "^10.0.4",
     "@astrojs/react": "^5.0.2",
+    "@google/genai": "^1.48.0",
+    "@nanostores/react": "^1.1.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.1.0",
     "gsap": "^3.14.2",
+    "nanostores": "^1.2.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   }

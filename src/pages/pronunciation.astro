@@ -6,7 +6,14 @@ import { db, Phrases } from "astro:db";
 const phrases = await db.select().from(Phrases);
 ---
 
-<Layout>
+<Layout title="Pronunciation">
+    <div slot="island-content">
+        <li style="display: flex; gap: 1rem; align-items: center;">
+            <a href="/speech" style="color: white; opacity: 0.7; text-decoration: none;">Speech</a>
+            <span style="opacity: 0.3;">|</span>
+            <span style="font-weight: bold;">Pronunciation</span>
+        </li>
+    </div>
     <main>
         <PronunciationGame client:load initialPhrases={phrases} />
     </main>
