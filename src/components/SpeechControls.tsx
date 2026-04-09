@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import VoiceRecorder from './VoiceRecorder';
-import { addBlock, currentTranscriptStore, isRecordingStore } from '../store/sttStore';
+import { addBlock, currentTranscriptStore, isRecordingStore } from '../store/speechToTextStore';
 
 let blockIdCounter = Date.now();
 

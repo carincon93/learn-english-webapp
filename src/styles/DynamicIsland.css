@@ -12,7 +12,6 @@
     justify-content: center;
     gap: 1rem;
     margin: auto;
-    width: 20%;
     height: 48px;
     overflow: hidden;
     opacity: 0;
@@ -31,7 +30,17 @@
     justify-content: space-between;
 }
 
-.dynamic-island__title {
+.dynamic-island__component-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+        color: white;
+    }
+}
+
+.dynamic-island__logo {
     font-size: 1rem;
     line-height: 0.9;
     font-weight: 700;
@@ -46,8 +55,4 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-}
-
-li {
-    height: 100%;
 }

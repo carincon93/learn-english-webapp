@@ -1,0 +1,224 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SpeechControls from "../components/SpeechControls";
+import ReadAloudDisplay from "../components/ReadingsDisplay";
+import {
+  db,
+  Readings as ReadingsTable,
+  PhoneticTranscriptions,
+} from "astro:db";
+
+// Get the last reading from the database
+const readings = await db.select().from(ReadingsTable).limit(1);
+const initialText = readings[0]?.text || "";
+const phoneticTranscriptions = await db.select().from(PhoneticTranscriptions);
+
+const initialPhonetics = JSON.stringify(phoneticTranscriptions);
+---
+
+<Layout title="Readings - Weird English">
+  <div slot="island-content" class="dynamic-island__component-content">
+    <button id="clearAllBtn">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M20 14V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12"
+        ></path>
+        <path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M14 18h6"></path>
+      </svg>
+    </button>
+
+    <button id="openDrawerBtn">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M11.35 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v5.35"
+        ></path>
+        <path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M14 19h6"></path>
+        <path d="M17 16v6"></path>
+      </svg>
+    </button>
+    <SpeechControls client:load />
+  </div>
+
+  <main
+    class="readings__container"
+    data-initial-text={initialText}
+    data-initial-phonetics={initialPhonetics}
+  >
+    <ReadAloudDisplay client:only="react" />
+  </main>
+
+  <div id="drawerOverlay" class="readings__drawer-overlay"></div>
+  <div id="inputDrawer" class="readings__drawer">
+    <div class="readings__drawer-handle"></div>
+    <div class="readings__input-area">
+      <textarea
+        id="raInput"
+        class="readings__input-text"
+        placeholder="Paste or type your text here..."></textarea>
+      <button id="processTextBtn">Process Text</button>
+    </div>
+  </div>
+
+  <script>
+    import gsap from "gsap";
+    import { actions } from "astro:actions";
+    import {
+      setReadingAction,
+      clearReadingAction,
+      updatePhoneticsAction,
+    } from "../store/readingsStore";
+
+    const textarea = document.getElementById("raInput") as HTMLTextAreaElement;
+    const processTextBtn = document.getElementById("processTextBtn");
+    const openDrawerBtn = document.getElementById("openDrawerBtn");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+    const drawer = document.getElementById("inputDrawer");
+    const overlay = document.getElementById("drawerOverlay");
+
+    let isDrawerOpen = false;
+
+    // --- Drawer Logic ---
+    function openDrawer() {
+      if (!drawer || !overlay || !textarea) return;
+      isDrawerOpen = true;
+
+      overlay.style.display = "block";
+      gsap.to(overlay, { opacity: 1, duration: 0.4 });
+      gsap.to(drawer, {
+        y: 0,
+        duration: 0.6,
+        ease: "power4.out",
+      });
+
+      textarea.focus();
+    }
+
+    function closeDrawer() {
+      if (!drawer || !overlay) return;
+      isDrawerOpen = false;
+
+      gsap.to(drawer, {
+        y: "100%",
+        duration: 0.4,
+        ease: "power2.in",
+      });
+
+      gsap.to(overlay, {
+        opacity: 0,
+        duration: 0.3,
+        onComplete: () => {
+          overlay.style.display = "none";
+        },
+      });
+    }
+
+    openDrawerBtn?.addEventListener("click", openDrawer);
+    overlay?.addEventListener("click", closeDrawer);
+    processTextBtn?.addEventListener("click", processText);
+    clearAllBtn?.addEventListener("click", clearAll);
+
+    async function clearAll() {
+      const { error } = await actions.deleteAllReadings();
+      if (error) {
+        console.error("Delete All Readings Error:", error);
+        alert("Failed to delete readings.");
+        return;
+      }
+      clearReadingAction();
+    }
+
+    async function processText() {
+      if (!textarea) return;
+      const text = textarea.value.trim();
+      if (!text) return;
+
+      // Optimistically or after success: update the store
+      // The user's code had a clearAllReadings() call here, which seems wrong
+      // if we want to save a NEW reading (unless the DB only holds one).
+      // Since the app currently only shows the latest reading, clearing first is correct.
+      await actions.deleteAllReadings();
+
+      const { data, error } = await actions.saveReading({
+        readingId: Date.now().toString(),
+        text,
+      });
+
+      if (error) {
+        console.error("Save Reading Error:", error);
+        alert("Failed to save reading. Please try again.");
+        return;
+      }
+
+      const { data: phoneticData, error: phoneticError } =
+        await actions.phoneticTranscription({
+          text,
+        });
+
+      if (phoneticError) {
+        console.error("Phonetic Transcription Error:", phoneticError);
+        alert("Failed to transcribe text. Please try again.");
+        return;
+      }
+
+      if (phoneticData?.transcription) {
+        const entries = phoneticData.transcription.split(",");
+        const mapping: Record<string, string> = {};
+        entries.forEach((entry) => {
+          const parts = entry.split(":");
+          if (parts.length >= 2) {
+            mapping[parts[0].trim().toLowerCase()] = parts[1].trim();
+          }
+        });
+        updatePhoneticsAction(mapping);
+      }
+
+      setReadingAction(text);
+      textarea.value = "";
+      closeDrawer();
+    }
+
+    // Initialize store with server-side data
+    const container = document.querySelector(
+      ".readings__container",
+    ) as HTMLElement;
+    const initialText = container?.dataset.initialText || "";
+    if (initialText) {
+      setReadingAction(initialText);
+    }
+
+    // Initialize phonetics store
+    const initialPhoneticsRaw = container?.dataset.initialPhonetics;
+    if (initialPhoneticsRaw) {
+      try {
+        const list = JSON.parse(initialPhoneticsRaw);
+        const mapping = list.reduce((acc: any, item: any) => {
+          acc[item.word.toLowerCase()] = item.phoneticTranscription;
+          return acc;
+        }, {});
+        updatePhoneticsAction(mapping);
+      } catch (e) {
+        console.error("Failed to parse initial phonetics:", e);
+      }
+    }
+  </script>
+</Layout>

@@ -1,4 +1,4 @@
-.game__card-wrapper {
+.card-game__card-wrapper {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -6,7 +6,7 @@
   width: 100%;
 }
 
-.game__card {
+.card-game__card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -26,7 +26,7 @@
     rgba(175, 175, 175, 0.05) -25px 25px;
 }
 
-.game__card-noise {
+.card-game__card-noise {
   pointer-events: none;
   position: absolute;
   inset: 0;
@@ -35,19 +35,19 @@
 }
 
 /* Header */
-.game__card-header {
+.card-game__card-header {
   margin-bottom: 2rem;
   text-align: center;
 }
 
-.game__card-title {
+.card-game__card-title {
   font-size: 2rem;
   font-weight: bold;
   color: #1f2937;
   margin-bottom: 0.5rem;
 }
 
-.game__card-stats {
+.card-game__card-stats {
   display: flex;
   justify-content: space-around;
   margin-top: 1rem;
@@ -56,7 +56,7 @@
 }
 
 /* Phrase card */
-.game__card-phrase-text {
+.card-game__card-phrase-text {
   font-size: 2.5rem;
   text-align: center;
   font-weight: bold;
@@ -64,24 +64,24 @@
   margin: 0;
 }
 
-.game__card-phrase {
+.card-game__card-phrase {
   margin-bottom: 4.5rem;
 }
 
-.game__card-phrase-top {
+.card-game__card-phrase-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
-.game__card-phrase-label {
+.card-game__card-phrase-label {
   font-size: 0.875rem;
   color: #6b7280;
   font-weight: bold;
 }
 
-.game__card-difficulty-badge {
+.card-game__card-difficulty-badge {
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
@@ -89,51 +89,51 @@
   font-weight: bold;
 }
 
-.game__card-difficulty-badge--easy {
+.card-game__card-difficulty-badge--easy {
   background-color: #10b981;
 }
 
-.game__card-difficulty-badge--medium {
+.card-game__card-difficulty-badge--medium {
   background-color: #f59e0b;
 }
 
-.game__card-difficulty-badge--hard {
+.card-game__card-difficulty-badge--hard {
   background-color: #ef4444;
 }
 
 /* Recorder wrapper */
-.game__card-recorder {
+.card-game__card-recorder {
   margin-bottom: .5rem;
 }
 
 /* Transcript */
-.game__card-transcript {
+.card-game__card-transcript {
   position: absolute;
   bottom: 5rem;
   padding-right: 2rem;
 }
 
-.game__card-transcript-label {
+.card-game__card-transcript-label {
   font-size: 0.75rem;
   color: #acacac;
   margin-bottom: 0.25rem;
 }
 
-.game__card-transcript-text {
+.card-game__card-transcript-text {
   font-size: 1rem;
   color: #acacac;
   font-style: italic;
 }
 
 /* Buttons */
-.game__card-actions {
+.card-game__card-actions {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
   margin-top: 1.5rem;
 }
 
-.game__card-btn {
+.card-game__card-btn {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   border: none;
@@ -145,13 +145,13 @@
   background-color: transparent;
 }
 
-.game__card-btn--skip:disabled {
+.card-game__card-btn--skip:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
 /* Instructions */
-.game__card-instructions {
+.card-game__card-instructions {
   margin-top: 2rem;
   padding: 1rem;
   background-color: #f9fafb;
@@ -160,13 +160,13 @@
   color: #6b7280;
 }
 
-.game__card-instructions ul {
+.card-game__card-instructions ul {
   margin: 0.5rem 0;
   padding-left: 1.5rem;
 }
 
 /* Score Badge */
-.game__card-score {
+.card-game__card-score {
   position: absolute;
   top: 1.5rem;
   right: 0.5rem;
@@ -174,7 +174,7 @@
   opacity: 0;
 }
 
-.game__card-score-badge {
+.card-game__card-score-badge {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -183,7 +183,7 @@
   min-width: 4rem;
 }
 
-.game__card-score-label {
+.card-game__card-score-label {
   font-size: 0.6rem;
   font-weight: 800;
   color: #888888;
@@ -191,7 +191,7 @@
   margin-bottom: 0.1rem;
 }
 
-.game__card-score-value {
+.card-game__card-score-value {
   font-size: 1.25rem;
   font-weight: 700;
   color: #ffffff;
@@ -219,4 +219,132 @@
   to {
     opacity: 1;
   }
+}
+
+/* JSON Import */
+.card-game__import {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #2a2a2a;
+}
+
+.card-game__import-file-input {
+  display: none;
+}
+
+.card-game__import-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 0.4rem;
+  color: #aaa;
+  font-size: 0.8rem;
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.15s, color 0.15s;
+}
+
+.card-game__import-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+.card-game__import-hint {
+  font-size: 0.72rem;
+  color: #555;
+}
+
+.card-game__import-hint code {
+  background: #1f1f1f;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  color: #888;
+  font-size: 0.7rem;
+}
+
+.card-game__import-error {
+  font-size: 0.78rem;
+  color: #f87171;
+  padding: 0.4rem 0.6rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 0.4rem;
+}
+
+.card-game__import-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card-game__import-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: #1a1a1a;
+  font-size: 0.78rem;
+  color: #aaa;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.card-game__import-preview-clear {
+  background: transparent;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 0.15rem;
+  display: flex;
+  align-items: center;
+  border-radius: 0.25rem;
+  transition: color 0.15s;
+}
+
+.card-game__import-preview-clear:hover {
+  color: #f87171;
+}
+
+.card-game__import-preview-code {
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 0.72rem;
+  color: #7dd3a8;
+  overflow-x: auto;
+  max-height: 12rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+  white-space: pre;
+}
+
+.card-game__import-confirm-btn {
+  margin: 0 0.75rem 0.75rem;
+  padding: 0.45rem 0.9rem;
+  background: #1d4ed8;
+  border: none;
+  border-radius: 0.4rem;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.card-game__import-confirm-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.card-game__import-confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

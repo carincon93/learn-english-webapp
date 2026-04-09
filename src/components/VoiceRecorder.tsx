@@ -252,7 +252,7 @@ export default function VoiceRecorder({
             <rect width="18" height="18" x="3" y="3" rx="2" />
           </svg>
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 23 20" fill="none" stroke="url(#mic-gradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mic-icon lucide-mic">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="url(#mic-gradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mic-icon lucide-mic">
             <defs>
               <linearGradient id="mic-gradient" gradientUnits="objectBoundingBox" gradientTransform="rotate(0, 0.5, 0.5)">
                 <stop offset="0%" stopColor="#4f46e5" />
