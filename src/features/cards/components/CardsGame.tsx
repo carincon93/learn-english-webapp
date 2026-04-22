@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
-import VoiceRecorder from './VoiceRecorder';
-import Drawer from './ui/Drawer';
+import VoiceRecorder from '../../../shared/components/VoiceRecorder';
+import Drawer from '../../../shared/components/ui/Drawer';
 import { actions } from 'astro:actions';
 
 

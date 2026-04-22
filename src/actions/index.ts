@@ -1,10 +1,11 @@
-import { db, Phrases, Readings, PhoneticTranscriptions, eq } from 'astro:db';
 import { defineAction } from 'astro:actions';
 import { z } from 'astro/zod';
 import { GoogleGenAI } from '@google/genai';
+import { GEMINI_API_KEY, GEMINI_MODEL as GEMINI_MODEL_ENV } from 'astro:env/server';
 
-const GEMINI_API_KEY = import.meta.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = import.meta.env.GEMINI_MODEL || 'gemini-3-flash-preview';
+import { prisma } from '../../db/db';
+
+const GEMINI_MODEL = GEMINI_MODEL_ENV ?? 'gemini-2.0-flash';
 const client = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 export const server = {
@@ -13,10 +14,7 @@ export const server = {
       phrase: z.string(),
     }),
     handler: async (input) => {
-      const result = await db.insert(Phrases).values({
-        phrase: input.phrase,
-      }).returning();
-      return result[0];
+      return prisma.phrase.create({ data: { phrase: input.phrase } });
     },
   }),
   updatePhrase: defineAction({
@@ -25,11 +23,10 @@ export const server = {
       phrase: z.string(),
     }),
     handler: async (input) => {
-      const result = await db.update(Phrases)
-        .set({ phrase: input.phrase })
-        .where(eq(Phrases.id, input.id))
-        .returning();
-      return result[0];
+      return prisma.phrase.update({
+        where: { id: input.id },
+        data: { phrase: input.phrase },
+      });
     },
   }),
   bulkImportPhrases: defineAction({
@@ -37,9 +34,10 @@ export const server = {
       phrases: z.array(z.string()),
     }),
     handler: async (input) => {
-      const values = input.phrases.map(phrase => ({ phrase }));
-      const result = await db.insert(Phrases).values(values).returning();
-      return result;
+      await prisma.phrase.createMany({
+        data: input.phrases.map((phrase) => ({ phrase })),
+      });
+      return prisma.phrase.findMany();
     },
   }),
   deletePhrase: defineAction({
@@ -47,7 +45,7 @@ export const server = {
       id: z.number(),
     }),
     handler: async (input) => {
-      await db.delete(Phrases).where(eq(Phrases.id, input.id));
+      await prisma.phrase.delete({ where: { id: input.id } });
       return { success: true };
     },
   }),
@@ -56,12 +54,9 @@ export const server = {
       text: z.string(),
     }),
     handler: async (input) => {
-      if (!GEMINI_API_KEY) {
-        throw new Error('GEMINI_API_KEY is not defined in environment variables');
-      }
 
-      const prompt = `Convert the following text to phonetic transcription: ${input.text}. 
-        Return only a list of words separated by commas with their phonetic transcription. 
+      const prompt = `Convert the following text to phonetic transcription: ${input.text}.
+        Return only a list of words separated by commas with their phonetic transcription.
         Example:
         Input: Hello, how are you?
         Output: Hello: /həˈloʊ/, how: /haʊ/, are: /ɑːr/, you: /juː/
@@ -69,21 +64,12 @@ export const server = {
 
       const result = await client.models.generateContent({
         model: GEMINI_MODEL,
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
       });
 
       const transcription = result.text || '';
-      // Save transcription for each word
       const entries = transcription.split(',');
+
       for (const entry of entries) {
         const parts = entry.split(':');
         if (parts.length < 2) continue;
@@ -91,25 +77,68 @@ export const server = {
         const word = parts[0].trim().toLowerCase();
         const phoneticTranscription = parts[1].trim();
 
-        console.log("Word:", word);
-        console.log("Phonetic Transcription:", phoneticTranscription);
+        const existing = await prisma.phoneticTranscription.findUnique({
+          where: { word },
+        });
+        if (existing) continue;
 
-        // Verify if word already exists in database
-        const existingWord = await db.select()
-          .from(PhoneticTranscriptions)
-          .where(eq(PhoneticTranscriptions.word, word))
-          .get();
-
-        if (existingWord) continue;
-
-        await db.insert(PhoneticTranscriptions).values({
-          id: crypto.randomUUID(),
-          word: word,
-          phoneticTranscription: phoneticTranscription,
+        await prisma.phoneticTranscription.create({
+          data: {
+            id: crypto.randomUUID(),
+            word,
+            phoneticTranscription,
+            audio: '',
+          },
         });
       }
 
       return { transcription };
+    },
+  }),
+  playWord: defineAction({
+    input: z.object({
+      id: z.string(),
+    }),
+    handler: async (input) => {
+
+      const word = await prisma.phoneticTranscription.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!word) throw new Error('Word not found');
+
+      let audioData = word.audio;
+      let mimeType = word.audioMimeType;
+
+      if (!audioData) {
+        const response: any = await client.models.generateContent({
+          model: 'gemini-2.5-flash-preview-tts',
+          contents: [{ parts: [{ text: `Say clearly: ${word.word}` }] }],
+          config: {
+            responseModalities: ['AUDIO'],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: 'Aoede' },
+              },
+            },
+          },
+        });
+
+        const part = response.candidates?.[0]?.content?.parts?.[0];
+        audioData = part?.inlineData?.data;
+        mimeType = part?.inlineData?.mimeType || 'audio/mpeg';
+
+        if (audioData) {
+          await prisma.phoneticTranscription.update({
+            where: { id: input.id },
+            data: { audio: audioData, audioMimeType: mimeType },
+          });
+        } else {
+          console.error('No inlineData found in response parts.');
+        }
+      }
+
+      return { audio: audioData, mimeType };
     },
   }),
   analyzeAudio: defineAction({
@@ -118,19 +147,16 @@ export const server = {
       mimeType: z.string(),
     }),
     handler: async (input) => {
-      if (!GEMINI_API_KEY) {
-        throw new Error('GEMINI_API_KEY is not defined in environment variables');
-      }
 
       const prompt = `
-        Act as an expert English language coach. 
-        I will provide an audio recording of my speech. 
+        Act as an expert English language coach.
+        I will provide an audio recording of my speech.
         Analyze it for:
         1. Grammar & Vocabulary: Correct any mistakes or suggest more natural phrasing.
         2. Pronunciation: Identify if any words sounded incorrect or unclear.
         3. Feedback: Provide 1-2 practical tips to improve.
-        
-        Keep your response concise, friendly, and use markdown for formatting. 
+
+        Keep your response concise, friendly, and use markdown for formatting.
         Use simple phonetic spelling instead of IPA for pronunciation tips (e.g. "Sheep" vs "Ship").
       `;
 
@@ -142,12 +168,7 @@ export const server = {
               role: 'user',
               parts: [
                 { text: prompt },
-                {
-                  inlineData: {
-                    data: input.audioBase64,
-                    mimeType: input.mimeType,
-                  },
-                },
+                { inlineData: { data: input.audioBase64, mimeType: input.mimeType } },
               ],
             },
           ],
@@ -167,8 +188,7 @@ export const server = {
     }),
     handler: async (input) => {
       try {
-        await db.insert(Readings).values({ id: input.readingId, text: input.text });
-
+        await prisma.reading.create({ data: { id: input.readingId, text: input.text } });
         return { success: true, readingId: input.readingId };
       } catch (error: any) {
         console.error('Save Reading Error:', error);
@@ -177,13 +197,28 @@ export const server = {
     },
   }),
   deleteAllReadings: defineAction({
+    input: z.object({}).optional(),
     handler: async () => {
       try {
-        await db.delete(Readings);
+        await prisma.reading.deleteMany();
         return { success: true };
       } catch (error: any) {
         console.error('Delete All Readings Error:', error);
         throw new Error('Failed to delete readings.');
+      }
+    },
+  }),
+  deletePhoneticTranscription: defineAction({
+    input: z.object({
+      id: z.string(),
+    }),
+    handler: async (input) => {
+      try {
+        await prisma.phoneticTranscription.delete({ where: { id: input.id } });
+        return { success: true };
+      } catch (error: any) {
+        console.error('Delete Phonetic Transcription Error:', error);
+        throw new Error('Failed to delete phonetic transcription.');
       }
     },
   }),

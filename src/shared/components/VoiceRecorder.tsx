@@ -102,13 +102,15 @@ export default function VoiceRecorder({
     recognition.onresult = (event: any) => {
       let interimTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const t = event.results[i][0].transcript;
+        const transcript = event.results[i][0].transcript.toLowerCase().trim();
+        if (!transcript) continue;
         if (event.results[i].isFinal) {
-          accumulatedRef.current += (accumulatedRef.current ? ' ' : '') + t;
+          accumulatedRef.current += (accumulatedRef.current ? ' ' : '') + transcript;
         } else {
-          interimTranscript = t;
+          interimTranscript = transcript;
         }
       }
+      // 🚩🚩🚩
       const display = [accumulatedRef.current, interimTranscript].filter(Boolean).join(' ');
       onTranscriptChangeRef.current(display);
       resetSilenceTimer();
@@ -162,11 +164,16 @@ export default function VoiceRecorder({
 
       if (isRecordingRef.current) {
         // Auto-restart to keep listening continuously
+        // Increase delay and add guards to avoid browser crashes (STATUS_ACCESS_VIOLATION)
         setTimeout(() => {
-          if (isRecordingRef.current) {
-            try { recognition.start(); } catch { /* already started */ }
+          if (isRecordingRef.current && recognitionRef.current) {
+            try { 
+              recognitionRef.current.start(); 
+            } catch (err) {
+              console.warn("SpeechRecognition auto-restart failed:", err);
+            }
           }
-        }, 100);
+        }, 400); 
       } else {
         setIsRecording(false);
         onRecordingStateChangeRef.current(false);
@@ -223,10 +230,25 @@ export default function VoiceRecorder({
   };
 
   const stopRecording = () => {
-    if (recognitionRef.current && isRecordingRef.current) {
-      isRecordingRef.current = false;
-      recognitionRef.current.stop();
-      // MediaRecorder and stream are stopped in recognition.onend when isRecordingRef is false
+    const wasAlreadyStopping = !isRecordingRef.current;
+    isRecordingRef.current = false;
+
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        // Recognition might already be stopped
+      }
+    }
+
+    // Force UI reset if we are stuck or if onend is taking too long
+    if (isRecording && wasAlreadyStopping) {
+      setIsRecording(false);
+      onRecordingStateChangeRef.current(false);
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
     }
   };
 

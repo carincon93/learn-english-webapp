@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@nanostores/react';
-import { currentReadingStore, phoneticsStore } from '../store/readingsStore';
 import gsap from 'gsap';
+
+import { currentReadingIndexStore, currentReadingStore, phoneticsStore } from '../stores/readingsStore';
 
 export default function ReadingsDisplay() {
   const currentText = useStore(currentReadingStore);
+  const currentReadingIndex = useStore(currentReadingIndexStore);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [translator, setTranslator] = useState<any>(null);
   const translationCache = useRef<Map<string, string>>(new Map());
 
   // Split text into words, removing empty segments
   const lines = currentText ? currentText.split('\n') : [];
+
+  // Track a running global word index across all lines
+  let globalWordIdx = 0;
 
   useEffect(() => {
     async function initTranslator() {
@@ -77,7 +82,6 @@ export default function ReadingsDisplay() {
 
     if (translated && tooltipRef.current) {
       const phonetics = phoneticsStore.get();
-      console.log(phonetics);
       const phonetic = phonetics[rawWord.toLowerCase()];
 
       const rect = target.getBoundingClientRect();
@@ -106,21 +110,25 @@ export default function ReadingsDisplay() {
     <>
       <div className="readings__text-content">
         {lines.some((line) => line.trim().length > 0) ? (
-          lines.map((line, lIdx) => (
-            <div key={lIdx} className="readings__line">
-              {line.split(/(\s+)/).map((part, pIdx) => {
-                if (/\s+/.test(part)) {
-                  return part;
+          lines.map((line, lineIdx) => (
+            <div key={lineIdx} className="readings__line">
+              {line.split(/(\s+)/).map((word, wordIdx) => {
+                if (/\s+/.test(word)) {
+                  return word;
                 }
-                if (part.length > 0) {
+                if (word.length > 0) {
+                  const currentWordIndex = globalWordIdx++;
                   return (
                     <span
-                      key={pIdx}
-                      onMouseEnter={(e) => handleMouseEnter(e, part)}
+                      key={wordIdx}
+                      onMouseEnter={(e) => handleMouseEnter(e, word)}
                       onMouseLeave={handleMouseLeave}
                       className="readings__word"
+                      style={{
+                        color: currentReadingIndex > currentWordIndex ? 'black' : 'gray'
+                      }}
                     >
-                      {part}
+                      {word}
                     </span>
                   );
                 }

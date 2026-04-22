@@ -1,17 +1,15 @@
 ---
-import "../styles/global.css";
-import "../styles/Readings.css";
-import "../styles/VoiceRecorder.css";
-import "../styles/CardsGame.css";
-import "../styles/Drawer.css";
-import "../styles/Toast.css";
-import "../styles/DynamicIsland.css";
+import "../../shared/styles/global.css";
+import "../../features/speech/styles/VoiceRecorder.css";
+import "../../features/cards/styles/CardsGame.css";
+import "../../shared/styles/Drawer.css";
+import "../../shared/styles/Toast.css";
+import "@carincon93/weird-ui/styles.css";
 
 import { ClientRouter } from "astro:transitions";
-import DynamicIsland from "../components/DynamicIsland";
+import DynamicIsland from "../../shared/components/DynamicIsland";
 
 const { title } = Astro.props;
-const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -26,7 +24,7 @@ const currentPath = Astro.url.pathname;
 		<ClientRouter />
 	</head>
 	<body>
-		<DynamicIsland client:load key={currentPath}>
+		<DynamicIsland client:load>
 			<slot name="island-content" />
 		</DynamicIsland>
 		<slot />

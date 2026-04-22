@@ -1,9 +1,9 @@
 ---
-import CardsGame from "../components/CardsGame";
-import Layout from "../layouts/Layout.astro";
-import { db, Phrases } from "astro:db";
+import CardsGame from "../features/cards/components/CardsGame";
+import Layout from "../app/layout/Layout.astro";
+import { prisma } from "../../db/db";
 
-const phrases = await db.select().from(Phrases);
+const phrases = await prisma.phrase.findMany();
 ---
 
 <Layout title="Cards">

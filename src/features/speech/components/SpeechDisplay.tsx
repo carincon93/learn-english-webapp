@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useStore } from '@nanostores/react';
-import { blocksStore, isRecordingStore, updateBlock, removeBlockAction } from '../store/speechToTextStore';
+import { blocksStore, isRecordingStore, updateBlock, removeBlockAction } from '../stores/speechToTextStore';
 import { actions } from 'astro:actions';
 import gsap from 'gsap';
 

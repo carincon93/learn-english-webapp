@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Phrase {
+  id     Int    @id @default(autoincrement())
+  phrase String
+}
+
+model Reading {
+  id   String @id
+  text String
+}
+
+model PhoneticTranscription {
+  id                   String @id
+  word                 String @unique
+  phoneticTranscription String
+  audio                String @default("") @db.Text
+  audioMimeType        String @default("audio/mpeg")
+}
