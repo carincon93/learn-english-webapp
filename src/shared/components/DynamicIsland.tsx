@@ -1,10 +1,31 @@
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, NavigationMenuListItem } from "@carincon93/weird-ui";
+import { useEffect, useState } from "react";
 
 export default function DynamicIsland({ children }: { children: React.ReactNode }) {
-    const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+    const [currentPath, setCurrentPath] = useState(typeof window !== 'undefined' ? window.location.pathname : '');
+    const [routeAboutToChange, setRouteAboutToChange] = useState<boolean>(false);
+
+    useEffect(() => {
+        const handleRouteChange = (_: Event) => {
+            setRouteAboutToChange(true);
+        };
+
+        const handleRouteChanged = () => {
+            setRouteAboutToChange(false);
+            setCurrentPath(window.location.pathname);
+        };
+
+        document.addEventListener("route-about-to-change", handleRouteChange);
+        document.addEventListener("astro:page-load", handleRouteChanged);
+
+        return () => {
+            document.removeEventListener("route-about-to-change", handleRouteChange);
+            document.removeEventListener("astro:page-load", handleRouteChanged);
+        };
+    }, []);
 
     return (
-        <NavigationMenu stopColor1="#ff42a1ff" stopColor2="#ff9696ff" lastActiveItem={currentPath}>
+        <NavigationMenu stopColor1="#ff42a1ff" stopColor2="#ff9696ff" lastActiveItem={currentPath} routeAboutToChange={routeAboutToChange} >
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuLink asChild>

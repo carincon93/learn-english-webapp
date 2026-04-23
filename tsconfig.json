@@ -1,7 +1,24 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "moduleResolution": "bundler"
+    "target": "es2023",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@carincon93/weird-ui/styles.css": ["../weird-ui/src/styles/styles.css"],
+      "@carincon93/weird-ui": ["../weird-ui/src/index.ts"]
+    }
   },
   "include": [
     ".astro/types.d.ts",

@@ -17,7 +17,7 @@
     "@astrojs/db": "^0.20.1",
     "@astrojs/node": "^10.0.5",
     "@astrojs/react": "^5.0.3",
-    "@carincon93/weird-ui": "github:carincon93/weird-ui",
+    "@carincon93/weird-ui": "link:../weird-ui",
     "@google/genai": "^1.50.1",
     "@nanostores/react": "^1.1.0",
     "@neondatabase/serverless": "^1.1.0",

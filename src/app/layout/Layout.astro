@@ -24,10 +24,23 @@ const { title } = Astro.props;
 		<ClientRouter />
 	</head>
 	<body>
-		<DynamicIsland client:load>
+		<DynamicIsland client:load transition:persist>
 			<slot name="island-content" />
 		</DynamicIsland>
 		<slot />
+
+		<script>
+			document.addEventListener("astro:before-preparation", (event) => {
+				// Dispatch a custom event
+				const routeAboutToChangeEvent = new CustomEvent(
+					"route-about-to-change",
+					{
+						detail: event.to,
+					},
+				);
+				document.dispatchEvent(routeAboutToChangeEvent);
+			});
+		</script>
 	</body>
 </html>
 
