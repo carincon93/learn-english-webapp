@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
-import VoiceRecorder from '../../../shared/components/VoiceRecorder';
-import Drawer from '../../../shared/components/ui/Drawer';
 import { actions } from 'astro:actions';
 
+import VoiceRecorder from '../../../shared/components/VoiceRecorder';
+import Drawer from '../../../shared/components/ui/Drawer';
 
 export interface GamePhrase {
   id: number;

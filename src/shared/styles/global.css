@@ -1,45 +1,39 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
+@theme {
+    --accent-primary: #ff42a1;
+    --accent-secondary: #ff9696;
+    --accent-primary-rgb: 255, 66, 161;
+    --accent-secondary-rgb: 255, 150, 150;
+}
+
 body {
     font-family: "Roboto", sans-serif;
-    background-color: var(--bg-page);
-    color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-y: scroll;
 }
 
-button {
-    appearance: none;
-    border: none;
-    background: none;
-    cursor: pointer;
-    width: fit-content;
-    color: inherit;
+.theme-transition::view-transition-group(root) {
+    animation-duration: 1s;
 }
 
-.button {
-    padding: 0.8rem 1.4rem;
-    border-radius: var(--border-radius);
-    background-color: var(--accent-primary);
-    color: white;
-    font-weight: 500;
-    transition: all 0.2s ease;
+.theme-transition::view-transition-new(root) {
+    animation: circle-expand 1s ease-out !important;
+    mix-blend-mode: normal !important;
 }
 
-.button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+.theme-transition::view-transition-old(root) {
+    animation: none !important;
+    mix-blend-mode: normal !important;
+    z-index: -1 !important;
 }
 
-.button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+@keyframes circle-expand {
+    from {
+        clip-path: circle(0% at var(--theme-x, center) var(--theme-y, center));
+    }
 
-a {
-    text-decoration: none;
+    to {
+        clip-path: circle(150% at var(--theme-x, center) var(--theme-y, center));
+    }
 }
-
-/* li[data-slot="navigation-menu-item"] a[data-slot="navigation-menu-link"] {
-    background-color: transparent;
-} */

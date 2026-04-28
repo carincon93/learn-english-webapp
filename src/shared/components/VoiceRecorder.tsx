@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 
-
 interface VoiceRecorderProps {
   onTranscriptChange: (transcript: string) => void;
   onSegmentComplete?: (transcript: string, audioUrl: string) => void;
@@ -167,13 +166,13 @@ export default function VoiceRecorder({
         // Increase delay and add guards to avoid browser crashes (STATUS_ACCESS_VIOLATION)
         setTimeout(() => {
           if (isRecordingRef.current && recognitionRef.current) {
-            try { 
-              recognitionRef.current.start(); 
+            try {
+              recognitionRef.current.start();
             } catch (err) {
               console.warn("SpeechRecognition auto-restart failed:", err);
             }
           }
-        }, 400); 
+        }, 400);
       } else {
         setIsRecording(false);
         onRecordingStateChangeRef.current(false);

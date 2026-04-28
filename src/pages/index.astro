@@ -7,19 +7,36 @@ import Toast from "../shared/components/ui/Toast";
 ---
 
 <Layout title="Weird English - Home">
-  <div slot="island-content">
-    <div style="display: flex; gap: 1rem; align-items: center;">
-      <a
-        href="/readings"
-        style="color: white; opacity: 0.7; text-decoration: none;">Readings</a
-      >
-      <span style="opacity: 0.3;">|</span>
-      <a
-        href="/cards"
-        style="color: white; opacity: 0.7; text-decoration: none;">Cards Game</a
-      >
+  <main class="hero__main">
+    <div>
+      <h1 class="hero__main-title">Weird English</h1>
+      <p class="hero__main-subtitle">
+        Learn English in a fun and interactive way
+      </p>
     </div>
-  </div>
-  <main></main>
+    <div class="hero__main-image">
+      <img
+        src="/images/hero-greek.webp"
+        alt="hero"
+        class="hero__main-image-img"
+      />
+    </div>
+  </main>
   <Toast client:load />
 </Layout>
+
+<style>
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .hero__main-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>

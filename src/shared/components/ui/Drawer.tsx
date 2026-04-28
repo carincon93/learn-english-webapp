@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-
 interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -73,7 +72,7 @@ export default function Drawer({ isOpen, onClose, title, children }: DrawerProps
         <div className="drawer__header">
           <h2 className="drawer__title">{title}</h2>
           <button className="drawer__close" onClick={onClose} aria-label="Close drawer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
           </button>
         </div>
         <div className="drawer__body">

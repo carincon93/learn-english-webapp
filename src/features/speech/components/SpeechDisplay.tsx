@@ -1,8 +1,9 @@
-import { useRef, useEffect, useState } from 'react';
-import { useStore } from '@nanostores/react';
-import { blocksStore, isRecordingStore, updateBlock, removeBlockAction } from '../stores/speechToTextStore';
-import { actions } from 'astro:actions';
 import gsap from 'gsap';
+import { useRef, useEffect } from 'react';
+import { useStore } from '@nanostores/react';
+import { actions } from 'astro:actions';
+
+import { blocksStore, isRecordingStore, updateBlock, removeBlockAction } from '../stores/speechToTextStore';
 
 export default function SpeechDisplay() {
   const textBlocks = useStore(blocksStore);

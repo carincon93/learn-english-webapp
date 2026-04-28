@@ -4,8 +4,6 @@ import "../features/readings/styles/Readings.css";
 import Layout from "../app/layout/Layout.astro";
 import SpeechControls from "../features/speech/components/SpeechControls";
 import ReadingsDisplay from "../features/readings/components/ReadingsDisplay";
-import BottomDrawer from "../shared/components/BottomDrawer";
-import Button from "../shared/components/Button";
 
 import { prisma } from "../../db/db";
 
@@ -69,7 +67,7 @@ const initialPhonetics = JSON.stringify(phoneticTranscriptions);
     <SpeechControls client:load />
   </div>
 
-  <BottomDrawer client:load>
+  <!-- <BottomDrawer client:load>
     <div class="readings__input-area">
       <textarea
         id="readingsInputTextarea"
@@ -79,7 +77,7 @@ const initialPhonetics = JSON.stringify(phoneticTranscriptions);
         <Button client:only="react" />
       </div>
     </div>
-  </BottomDrawer>
+  </BottomDrawer> -->
 
   <script>
     import gsap from "gsap";
@@ -133,7 +131,7 @@ const initialPhonetics = JSON.stringify(phoneticTranscriptions);
         // Optimistically or after success: update the store
         await actions.deleteAllReadings({});
 
-        const { data, error } = await actions.saveReading({
+        const { error } = await actions.saveReading({
           readingId: Date.now().toString(),
           text,
         });

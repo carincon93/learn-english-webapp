@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-
 export interface ToastEventDetail {
   message: string;
   type: 'success' | 'error' | 'partial' | 'retry';
