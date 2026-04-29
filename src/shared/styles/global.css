@@ -1,39 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
 
 @theme {
-    --accent-primary: #ff42a1;
-    --accent-secondary: #ff9696;
-    --accent-primary-rgb: 255, 66, 161;
-    --accent-secondary-rgb: 255, 150, 150;
+  --accent-primary: #ff42a1;
+  --accent-secondary: #ff9696;
+  --accent-primary-rgb: 255, 66, 161;
+  --accent-secondary-rgb: 255, 150, 150;
 }
 
 body {
-    font-family: "Roboto", sans-serif;
-    overflow-y: scroll;
-}
-
-.theme-transition::view-transition-group(root) {
-    animation-duration: 1s;
-}
-
-.theme-transition::view-transition-new(root) {
-    animation: circle-expand 1s ease-out !important;
-    mix-blend-mode: normal !important;
-}
-
-.theme-transition::view-transition-old(root) {
-    animation: none !important;
-    mix-blend-mode: normal !important;
-    z-index: -1 !important;
-}
-
-@keyframes circle-expand {
-    from {
-        clip-path: circle(0% at var(--theme-x, center) var(--theme-y, center));
-    }
-
-    to {
-        clip-path: circle(150% at var(--theme-x, center) var(--theme-y, center));
-    }
+  font-family: 'Roboto', sans-serif;
+  overflow-y: scroll;
 }

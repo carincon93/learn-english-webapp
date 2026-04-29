@@ -19,7 +19,6 @@ model Reading {
 model PhoneticTranscription {
   id                    String @id
   word                  String @unique
-  translation           String
   phoneticTranscription String
   audio                 String @default("") @db.Text
   audioMimeType         String @default("audio/mpeg")

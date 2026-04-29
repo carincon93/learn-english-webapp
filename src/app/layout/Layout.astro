@@ -20,6 +20,23 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<ClientRouter />
+		<script is:inline>
+			const applyTheme = () => {
+				const theme = typeof localStorage !== 'undefined' && localStorage.getItem('theme') 
+					? localStorage.getItem('theme') 
+					: (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				
+				if (theme === 'dark') {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			};
+
+			applyTheme();
+
+			document.addEventListener('astro:after-swap', applyTheme);
+		</script>
 	</head>
 	<body>
 		<DynamicIsland client:only="react" transition:persist>

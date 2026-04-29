@@ -43,6 +43,12 @@ export default function DynamicIsland({
       : true
   )
 
+  useEffect(() => {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('theme', isDark ? 'dark' : 'light')
+    }
+  }, [isDark])
+
   function toggleTheme(e: React.MouseEvent) {
     toggleThemeWithTransition(e, setIsDark)
   }
