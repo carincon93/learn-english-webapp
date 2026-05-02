@@ -1,6 +1,6 @@
 ---
-import Layout from "../app/layout/Layout.astro";
-import Toast from "../shared/components/ui/Toast";
+import Layout from '../app/layout/Layout.astro'
+import Toast from '../shared/components/ui/Toast'
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -9,34 +9,231 @@ import Toast from "../shared/components/ui/Toast";
 <Layout title="Weird English - Home">
   <main class="hero__main">
     <div>
-      <h1 class="hero__main-title">Weird English</h1>
+      <!-- <h1 class="hero__main-title">Weird English</h1>
       <p class="hero__main-subtitle">
         Learn English in a fun and interactive way
-      </p>
+      </p> -->
     </div>
     <div class="hero__main-image">
       <img
         src="/images/hero-greek.webp"
         alt="hero"
         class="hero__main-image-img"
+        style="opacity: 0;"
+      />
+
+      <img
+        src="/images/hero-arm-bandage.webp"
+        alt="hero-arm-bandage"
+        class="hero__main-image-img-arm-bandage"
+        style="opacity: 0;"
+      />
+
+      <img
+        src="/images/hero-head-bandage.webp"
+        alt="hero-head-bandage"
+        class="hero__main-image-img-head-bandage"
+        style="opacity: 0;"
+      />
+
+      <img
+        src="/images/hero-finger-cross.webp"
+        alt="hero-finger-cross"
+        class="hero__main-image-img-finger-cross"
+        style="opacity: 0;"
       />
     </div>
   </main>
   <Toast client:load />
 </Layout>
 
+<script>
+  import gsap from 'gsap'
+
+  document.addEventListener('astro:page-load', () => {
+    const mainContainer = document.querySelector('.hero__main') as HTMLElement
+
+    if (!mainContainer) return
+
+    const tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
+
+    tl.to('.hero__main-image-img', {
+      opacity: 1,
+      scale: 0.95,
+      duration: 1
+    })
+      .to(
+        '.hero__main-image-img-head-bandage',
+        {
+          opacity: 1,
+          duration: 0.6
+        },
+        '-=0.6'
+      )
+      .to(
+        '.hero__main-image-img-arm-bandage',
+        {
+          opacity: 1,
+          duration: 0.6
+        },
+        '-=0.4'
+      )
+      .to(
+        '.hero__main-image-img-finger-cross',
+        {
+          opacity: 1,
+          duration: 0.6
+        },
+        '-=0.4'
+      )
+  })
+</script>
+
 <style>
-  main {
+  .hero__main {
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-content: center;
     align-items: center;
-    height: 100vh;
   }
 
   .hero__main-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+  }
+
+  .hero__main-image-img {
+    object-fit: contain;
+    margin-top: 70px;
+  }
+
+  .hero__main-image > img:not(.hero__main-image-img) {
+    position: absolute;
+  }
+
+  /* Tablets */
+  @media (max-width: 992px) {
+    .hero__main-image,
+    .hero__main-image-img {
+      width: 458px;
+    }
+
+    .hero__main-image-img {
+      height: 502px;
+    }
+
+    .hero__main-image-img-head-bandage {
+      left: 226px;
+      top: 165px;
+      width: 138px;
+    }
+
+    .hero__main-image-img-arm-bandage {
+      left: 68px;
+      top: 275px;
+      width: 85px;
+    }
+
+    .hero__main-image-img-finger-cross {
+      left: 150px;
+      bottom: 160px;
+      width: 40px;
+    }
+  }
+
+  /* Laptops / Small Desktops */
+  /*@media (min-width: 992px) { ... }*/
+
+  /* Large Desktops */
+  @media (min-width: 993px) and (max-width: 1200px) {
+    .hero__main {
+      grid-template-columns: 2fr 3fr;
+    }
+
+    .hero__main-image,
+    .hero__main-image-img {
+      width: 711px;
+    }
+
+    .hero__main-image-img {
+      height: 590px;
+    }
+
+    .hero__main-image-img-head-bandage {
+      right: 194px;
+      top: 180px;
+      width: 155px;
+    }
+
+    .hero__main-image-img-arm-bandage {
+      top: 300px;
+      left: 152px;
+      width: 105px;
+    }
+
+    .hero__main-image-img-finger-cross {
+      bottom: 185px;
+      left: 265px;
+      width: 40px;
+    }
+  }
+
+  /* Extra Large Screens */
+  @media (min-width: 1201px) and (max-width: 1400px) {
+    .hero__main-image,
+    .hero__main-image-img {
+      width: 686px;
+    }
+
+    .hero__main-image-img {
+      height: 686px;
+    }
+
+    .hero__main-image-img-head-bandage {
+      right: 158px;
+      top: 186px;
+      width: 180px;
+    }
+
+    .hero__main-image-img-arm-bandage {
+      top: 340px;
+      left: 95px;
+      width: 118px;
+    }
+
+    .hero__main-image-img-finger-cross {
+      bottom: 212px;
+      left: 230px;
+      width: 50px;
+    }
+  }
+
+  /* Extra Extra Large Screens */
+  @media (min-width: 1401px) {
+    .hero__main-image,
+    .hero__main-image-img {
+      width: 806px;
+    }
+
+    .hero__main-image-img {
+      height: 806px;
+    }
+
+    .hero__main-image-img-head-bandage {
+      right: 185px;
+      top: 215px;
+      width: 210px;
+    }
+
+    .hero__main-image-img-arm-bandage {
+      top: 400px;
+      left: 125px;
+      width: 140px;
+    }
+
+    .hero__main-image-img-finger-cross {
+      bottom: 260px;
+      left: 275px;
+      width: 60px;
+    }
   }
 </style>
