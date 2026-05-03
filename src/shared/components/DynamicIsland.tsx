@@ -100,7 +100,7 @@ export default function DynamicIsland({
           </NavigationMenuLink>
         </NavigationMenuItem>
 
-        <NavigationMenuItem>
+        <NavigationMenuItem className="flex">
           <button onClick={toggleTheme}>{isDark ? <Sun /> : <Moon />}</button>
         </NavigationMenuItem>
       </NavigationMenuList>
