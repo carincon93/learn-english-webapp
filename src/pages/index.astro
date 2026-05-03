@@ -50,12 +50,16 @@ import Toast from '../shared/components/ui/Toast'
 <script>
   import gsap from 'gsap'
 
-  document.addEventListener('astro:page-load', () => {
-    const mainContainer = document.querySelector('.hero__main') as HTMLElement
+  let tl: gsap.core.Timeline | null = null
 
+  function initTimeline() {
+    const mainContainer = document.querySelector('.hero__main')
     if (!mainContainer) return
 
-    const tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
+    // Kill previous timeline if it exists
+    if (tl) tl.kill()
+
+    tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
 
     tl.to('.hero__main-image-img', {
       opacity: 1,
@@ -86,6 +90,17 @@ import Toast from '../shared/components/ui/Toast'
         },
         '-=0.4'
       )
+  }
+
+  // Handle entry
+  document.addEventListener('astro:page-load', initTimeline)
+
+  // Handle exit
+  document.addEventListener('route-about-to-change', (e: Event) => {
+    const customEvent = e as CustomEvent<{ pathname: string }>
+    if (customEvent?.detail.pathname !== '/' && tl) {
+      tl.reverse()
+    }
   })
 </script>
 
@@ -190,19 +205,19 @@ import Toast from '../shared/components/ui/Toast'
 
     .hero__main-image-img-head-bandage {
       right: 158px;
-      top: 186px;
+      top: 195px;
       width: 180px;
     }
 
     .hero__main-image-img-arm-bandage {
-      top: 340px;
-      left: 95px;
+      top: 345px;
+      left: 105px;
       width: 118px;
     }
 
     .hero__main-image-img-finger-cross {
-      bottom: 212px;
-      left: 230px;
+      bottom: 218px;
+      left: 235px;
       width: 50px;
     }
   }
