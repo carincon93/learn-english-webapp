@@ -66,7 +66,7 @@ export default function DynamicIsland({
           <NavigationMenuLink asChild>
             <a href="/" className="hover:bg-transparent">
               <strong className="text-sm">Weird</strong>{' '}
-              <small className="bg-clip-text text-transparent bg-gradient-to-br from-[#ff42a1] to-[#ff9696]">
+              <small className="bg-clip-text text-transparent bg-linear-to-br from-[#ff42a1] to-[#ff9696]">
                 English
               </small>
             </a>
@@ -93,7 +93,7 @@ export default function DynamicIsland({
           <NavigationMenuLink asChild>
             <a
               href="/cards"
-              className="!rounded-full px-8 py-2 !bg-foreground !text-background inline-flex items-center justify-center"
+              className="rounded-full! px-8 py-2 bg-foreground! text-background! inline-flex items-center justify-center"
             >
               Cards
             </a>
